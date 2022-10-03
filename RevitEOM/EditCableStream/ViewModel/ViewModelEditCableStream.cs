@@ -214,7 +214,7 @@ namespace EditCableStream.ViewModel
             FilterCable = new LambdaCommand<object>(p => true, p => Filter());
         }
 
-        // првоерка
+        
         private bool Filter()
         {
             Cablecollection.Filter = FilterGroupNumber;
