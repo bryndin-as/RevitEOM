@@ -131,7 +131,7 @@ namespace EditCableStream.ViewModel
                     }
                 }
             }
-
+            //провекра
             foreach (var CurFam in CurrentFamilys)
             {
                 Element elem = Doc.GetElement(CurFam);
