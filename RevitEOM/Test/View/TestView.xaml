@@ -1,0 +1,227 @@
+﻿<Window x:Class="Test.View.TestView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        
+        xmlns:utilities="clr-namespace:Utilities" 
+        xmlns:viewmodel="clr-namespace:Test.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:ViewModelTest}"
+        mc:Ignorable="d" 
+        
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+             FontFamily="Cambria Math"
+             FontSize="14"
+             Title="{Binding Title}"
+             Height="800" Width="800"
+            ResizeMode="NoResize"
+            WindowStartupLocation="CenterScreen">
+    <Grid HorizontalAlignment="Right" Margin="0,0,-0.2,-0.4" Width="313">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Content="Test"  Grid.Row="0" Command="{Binding ButtonTest}" />
+        <Button Content="Transaction" Grid.Row="3"/>
+        <TextBox Grid.Row="1" Text="{Binding Title}"></TextBox>
+    </Grid>
+    <!--<Grid ShowGridLines="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Background="#1D3872"/>
+        <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" LastChildFill="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Адрес папки:" Margin="5" DockPanel.Dock="Left"/>
+                <TextBox x:Name="PathAddress" Grid.Column="1" HorizontalAlignment="Stretch"  
+                     Grid.ColumnSpan="4"
+                     Width="Auto"
+                     Margin="5"/>
+                <Button Grid.Column="5"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#1D3872"
+                        Content="ПОКАЗАТЬ"
+                        />
+            </Grid>
+        </DockPanel>
+        <DockPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">
+            <Button Grid.Column="0"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#1D3872"
+                        Content="Показать файлы для выгрузки"
+                        />
+        </DockPanel>
+        <DockPanel Grid.Column="0" Grid.Row="3" LastChildFill="True">
+            <TextBlock Text="Фильтр:" Margin="5" DockPanel.Dock="Left"/>
+            <TextBox 
+                     HorizontalAlignment="Stretch"  
+                     Width="Auto"
+                     Margin="5"/>
+        </DockPanel>
+        <ListBox Grid.Column="0" Grid.Row="4" Grid.RowSpan="1"  >
+            <ListBox.ItemTemplate>
+                <HierarchicalDataTemplate>
+                    <CheckBox   
+                              />
+                </HierarchicalDataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="2" LastChildFill="True">
+            <Button Grid.Column="0"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#1D3872"
+                        Content="Выгрузить модель в БД" ></Button>
+        </DockPanel>
+    </Grid>-->
+
+    <!--<Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Background="#499FFB"/>
+        <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" LastChildFill="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Введите номер группы:" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                <TextBox x:Name="PathAddress" Grid.Column="1" HorizontalAlignment="Stretch"  
+                     Grid.ColumnSpan="4"
+                     Width="Auto"
+                     Margin="5"/>
+                <Button Grid.Column="5"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#499FFB"
+                        Content="ПОКАЗАТЬ"
+                        Margin="5"/>
+            </Grid>
+        </DockPanel>
+        <DataGrid AutoGenerateColumns="False"
+                  Grid.Column ="0" Grid.Row="2"
+                  SelectionUnit="Cell"
+                  CanUserAddRows="False" 
+                  ItemsSource="{Binding DataCollection}" 
+                  ScrollViewer.CanContentScroll="False"
+                  GridLinesVisibility="Vertical"
+                  SelectionMode="Single"
+                  BorderThickness="0"
+                  BorderBrush="#499FFB"
+                  HeadersVisibility="Column"
+                  VerticalGridLinesBrush="DarkGray">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#499FFB" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="BorderBrush" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter Property="BorderBrush" Value="White" />
+                            <Setter Property="Margin" Value="0,2,0,2" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="FontWeight"  Value="Bold" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Background" Value="#499FFB" />
+                    <Setter Property="MinHeight" Value="20" />
+                    <Setter Property="Padding" Value="10" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    MinWidth="100"
+                    Width="200"
+                    Header="Порядковый номер" 
+                    Binding="{Binding Id}" 
+                    IsReadOnly="True"/>
+                <DataGridTextColumn 
+                    MinWidth="100"
+                    Width="*"
+                    Header="Номер группы" 
+                    Binding="{Binding GroupNumber}" 
+                    IsReadOnly="True"/>
+
+
+
+                <DataGridTemplateColumn Header="Тип кабеля" Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate >
+                            <ComboBox ItemsSource="{Binding CableType}" 
+                                      SelectedItem="{Binding Path=Selecteditem}">
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+
+                <DataGridTextColumn 
+                    Width="*"
+                    Header="Длина кабеля" 
+                    Binding="{Binding CableLength}" 
+                    IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DockPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" LastChildFill="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" 
+                        BorderThickness="0"
+                        Margin="0,0,1,0"
+                        Foreground="White"                        
+                        Background="#499FFB"
+                        Content="ПЕРЕЗАПИСАТЬ ЗНАЧЕНИЕ"
+                        Command="{Binding EditCableStreamTest}">
+                </Button>
+
+            </Grid>
+        </DockPanel>
+    </Grid>-->
+
+
+
+
+</Window>
