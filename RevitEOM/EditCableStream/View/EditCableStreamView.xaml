@@ -17,35 +17,62 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
         </Grid.RowDefinitions>
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" LastChildFill="True">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Введите номер группы:" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
-                <TextBox x:Name="FilterGroupNumber" Grid.Column="1" HorizontalAlignment="Stretch"  
+            <GroupBox Header="Фильтрация элементов">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Введите номер группы:" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="FilterGroupNumber" Grid.Column="1" HorizontalAlignment="Stretch"  
                      Grid.ColumnSpan="4"
                      Width="Auto"
                      Margin="5"
                          Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Grid.Column="5"
+                    <Button Grid.Column="5"
                         BorderThickness="0"
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="ПОКАЗАТЬ"
                         Margin="5"
                         Command="{Binding FilterCable, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
+                </Grid>
+            </GroupBox>
+        </DockPanel>
+        <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" LastChildFill="True">
+            <GroupBox Header="Корректировка значений">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Введите номер группы:" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="Filte" Grid.Column="1" HorizontalAlignment="Stretch"  
+                     Grid.ColumnSpan="4"
+                     Width="Auto"
+                     Margin="5"
+                         Text="Тест"/>
+                    <Button Grid.Column="5"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#499FFB"
+                        Content="ПОКАЗАТЬ"
+                        Margin="5"
+                        />
+                </Grid>
+            </GroupBox>
         </DockPanel>
         <DataGrid AutoGenerateColumns="False"
                   x:Name="DataGridCable"
-                  Grid.Column ="0" Grid.Row="1"
+                  Grid.Column ="0" Grid.Row="2"
                   SelectionUnit="Cell"
                   CanUserAddRows="False" 
                   ItemsSource="{Binding Cablecollection}" 
@@ -99,7 +126,7 @@
                     Width="*"
                     Header="Номер КЛ" 
                     Binding="{Binding NumberKL}" 
-                    IsReadOnly="True" Visibility="Hidden"/>
+                    IsReadOnly="True" />
                 <DataGridTemplateColumn Header="Тип кабеля" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate >
@@ -122,7 +149,7 @@
                     IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DockPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="True">
+        <DockPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" LastChildFill="True">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
