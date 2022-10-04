@@ -159,7 +159,7 @@ namespace EditCableStream.ViewModel
 
 
 
-                if (Fam.Name == "ASML_ЭОМ_КЛ_Г_Поток_ОКЛ") //  && Inst.Name == "Г_Поток_FRHF"
+                if (Fam.Name == "ASML_ЭОМ_КЛ_Г_Поток_ОКЛ")
                 {
                     if (Inst.Name == "Г_Поток_FRHF")
                     {
