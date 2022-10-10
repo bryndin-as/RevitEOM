@@ -155,7 +155,7 @@ namespace EditCableStream.ViewModel
             List<ElementId> CurrentFamilys = new FilteredElementCollector(Doc).OfClass(typeof(FamilyInstance))
                                                                       .OfCategory(BuiltInCategory.OST_ElectricalFixtures)
                                                                       .Cast<FamilyInstance>()
-                                                                      .Where(it => it.Name.Contains("Г_")) //УДАЛИТЬ ВЫБОРКА ПО КАБЕЛЮ
+                                                                      .Where(it => it.Symbol.FamilyName.Contains("ASML_ЭОМ_КЛ_"))
                                                                       .Select(it => it.Id)
                                                                       .ToList();
             FamilyInstanseOnView = CurrentFamilys;
@@ -328,10 +328,11 @@ namespace EditCableStream.ViewModel
                     {
                         ElementId FamilyTapesID = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
                                                                      .Cast<FamilySymbol>()
-                                                                     .Where(it => it.FamilyName == "Кабель_FR_Графика")
+                                                                     .Where(it => it.FamilyName.Contains("Графика"))
                                                                      .Where(it => it.Name == SelTypeFamily)
                                                                      .Select(it => it.Id)
                                                                      .FirstOrDefault();
+
                         using (Transaction transaction = new Transaction(Doc))
                         {
                             transaction.Start("Перезапись параметров");
