@@ -190,7 +190,7 @@
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="ПЕРЕЗАПИСАТЬ ТИП КАБЕЛЯ"
-                        Command="{Binding EditCableStreamTest}">
+                        Command="{Binding EditCableType}">
                 </Button>
                 <Button Grid.Column="1" 
                         BorderThickness="0"
@@ -198,7 +198,7 @@
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="ПЕРЕЗАПИСАТЬ НОМЕР ГРУППЫ"
-                        >
+                        Command="{Binding EditCableGroupNumber}">
                 </Button>
                 <Button Grid.Column="2" 
                         BorderThickness="0"
