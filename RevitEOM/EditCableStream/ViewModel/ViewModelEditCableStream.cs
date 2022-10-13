@@ -62,6 +62,24 @@ namespace EditCableStream.ViewModel
             set => Set(ref _TextToFilter, value);
         }
 
+
+        private string _TextToCurGroupNamber = string.Empty;
+
+        public string TextToCurGroupNamber
+        {
+            get => _TextToCurGroupNamber;
+            set => Set(ref _TextToCurGroupNamber, value);
+        }
+
+        private string _TextToNewGroupNumber = string.Empty;
+
+        public string TextToNewGroupNumber
+        {
+            get => _TextToNewGroupNumber;
+            set => Set(ref _TextToNewGroupNumber, value);
+        }
+
+
         private List<ElementId> _FamilyInstanseOnView;
 
         public List<ElementId> FamilyInstanseOnView
@@ -104,6 +122,31 @@ namespace EditCableStream.ViewModel
             set => Set(ref _ListCaleTypeName, value);
         }
 
+
+        private List<string> _ListCableTypeGraphics;
+
+        public List<string> ListCableTypeGraphics
+        {
+            get => _ListCableTypeGraphics;
+            set => Set(ref _ListCableTypeGraphics, value);
+        }
+
+
+
+        private string _SelecteditemCableTypeGraphics;
+
+        public string SelecteditemCableTypeGraphics
+        {
+            get => _SelecteditemCableTypeGraphics;
+            set => Set(ref _SelecteditemCableTypeGraphics, value);
+        }
+
+
+
+
+
+
+
         private List<Parameter> _ListGroupNumberParam;
 
         public List<Parameter> ListGroupNumberParam
@@ -132,6 +175,8 @@ namespace EditCableStream.ViewModel
         #region Command
         public LambdaCommand<object> EditCableType { get; set; }
         public LambdaCommand<object> EditCableGroupNumber { get; set; }
+        public LambdaCommand<object> SetGroupNumber { get; set; }
+        public LambdaCommand<object> SetCabelType { get; set; }
         public LambdaCommand<object> FilterCable { get; set; }
         #endregion
 
@@ -166,7 +211,28 @@ namespace EditCableStream.ViewModel
 
             CabelTypesFR = CabelTypesFRList;
 
+            List<string> CableTypeGraphics = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
+                                                                    .Cast<FamilySymbol>()
+                                                                    .Where(it => it.FamilyName.Contains("Графика"))
+                                                                    .Select(it => it.Name)
+                                                                    .ToList();
 
+            ListCableTypeGraphics = CableTypeGraphics;
+
+
+
+            foreach (var item in ListCableTypeGraphics)
+            {
+                if (item == "Нет")
+                {
+                    SelecteditemCableTypeGraphics = item;
+                }
+                if (item == "Нет FR")
+                {
+                    SelecteditemCableTypeGraphics = item;
+                }
+
+            }
 
             ObservableCollection<CableParameter> ViewDataCollection = new ObservableCollection<CableParameter>();
             List<Parameter> ViewDataCollectionGroupNumberParamList = new List<Parameter>();
@@ -206,6 +272,8 @@ namespace EditCableStream.ViewModel
             }
             ListGroupNumberParam = ViewDataCollectionGroupNumberParamList;
 
+
+
             CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Поток_ОДН", "Г_Поток_HF", "Нет", ListCaleTypeName);
             CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Поток_ОДН", "Г_Поток_LS", "Нет", ListCaleTypeName);
             CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОДН", "Г_Линия_HF", "Нет", ListCaleTypeName);
@@ -221,6 +289,8 @@ namespace EditCableStream.ViewModel
 
             EditCableType = new LambdaCommand<object>(p => true, p => EditCableTypeAction());
             EditCableGroupNumber = new LambdaCommand<object>(p => true, p => EditCableGroupNumberAction());
+            SetGroupNumber = new LambdaCommand<object>(p => true, p => SetGroupNumberAction());
+            SetCabelType = new LambdaCommand<object>(p => true, p => SetCabelTypeAction());
             FilterCable = new LambdaCommand<object>(p => true, p => Filter());
         }
 
@@ -368,6 +438,30 @@ namespace EditCableStream.ViewModel
                 }
             }
             TaskDialog.Show("INFO", "Номер группы изменен");
+        }
+
+        private void SetGroupNumberAction()
+        {
+            foreach (var datacoll in DataCollection)
+            {
+                if (TextToCurGroupNamber == datacoll.GroupNumber)
+                {
+                    datacoll.GroupNumber = TextToNewGroupNumber;
+                }
+            }
+            Cablecollection.Refresh();
+        }
+
+        private void SetCabelTypeAction()
+        {
+            foreach (var datacoll in DataCollection)
+            {
+                if (TextToCurGroupNamber == datacoll.GroupNumber)
+                {
+                    datacoll.SelecteditemCableType = SelecteditemCableTypeGraphics;
+                }
+            }
+            Cablecollection.Refresh();
         }
     }
 }

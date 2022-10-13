@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"></RowDefinition>
-            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
         </Grid.RowDefinitions>
@@ -44,57 +44,94 @@
                         Content="ПОКАЗАТЬ"
                         Margin="5"
                         Command="{Binding FilterCable, UpdateSourceTrigger=PropertyChanged}"/>
-                    
+
                 </Grid>
             </GroupBox>
         </DockPanel>
         <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" LastChildFill="True">
             <GroupBox Header="Корректировка значений номера группы и типа КЛ" >
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.15*" />
+                        <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="1.21*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Введите старый № Гр."  DockPanel.Dock="Left" VerticalAlignment="Center"/>
-                    <TextBox x:Name="Filte" Grid.Column="1" HorizontalAlignment="Left"  
-                     Grid.ColumnSpan="2"
-                     Width="100"
-                     Margin="5"
-                     Text=""
-                              Panel.ZIndex="10000"
-                             VerticalContentAlignment="Center"/>
-                    
-                    <TextBlock Grid.Column="2" Text="Введите новый № Гр." Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Text="Введите текущий № группы"  DockPanel.Dock="Left" VerticalAlignment="Center"/>
 
-                    <TextBox x:Name="Filtet" Grid.Column="2" HorizontalAlignment="Right"  
+                    <TextBox x:Name="CurGroupNamber" Grid.Column="1" HorizontalAlignment="Left"  
                      Grid.ColumnSpan="2"
-                     Width="100"
+                     Width="147"
                      Margin="5"
-                     Text="" 
+                     Text="{Binding TextToCurGroupNamber, UpdateSourceTrigger=PropertyChanged}"
+                     Panel.ZIndex="10000"
+                     VerticalContentAlignment="Center"/>
+
+
+                    <TextBlock Grid.Column="2" Text="Введите новый № группы" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+
+                    <TextBox x:Name="NewGroupNumber" Grid.Column="2" 
+                             HorizontalAlignment="Center"  
+                     Grid.ColumnSpan="3"
+                     Width="140"
+                     Margin="5"
+                     Text="{Binding TextToNewGroupNumber, UpdateSourceTrigger=PropertyChanged}"
                      Panel.ZIndex="1000"
-                             VerticalContentAlignment="Center"/>
-
-                    <TextBlock Grid.Column="4" Text="Выберите тип КЛ" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    VerticalContentAlignment="Center"/>
 
 
-                    
 
-                    <ComboBox Grid.Column="5"
-                              Margin="5"
-                              ItemsSource="{Binding CabelTypes}"/>
+
+
 
                     <Button Grid.Column="6"
                         BorderThickness="0"
                         Foreground="White"                        
                         Background="#499FFB"
-                        Content="НАЗНАЧИТЬ"
-                        Margin="5"/>
-                        
+                        Content="НАЗНАЧИТЬ № ГРУППЫ"
+                        Margin="5"
+                        Command="{Binding SetGroupNumber}"/>
+
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Введите текущий № группы"  DockPanel.Dock="Left" VerticalAlignment="Center"/>
+
+                    <TextBox  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left"  
+                     Grid.ColumnSpan="2"
+                     Width="147"
+                     Margin="5"
+                     Text="{Binding TextToCurGroupNamber, UpdateSourceTrigger=PropertyChanged}"
+                     Panel.ZIndex="10000"
+                     VerticalContentAlignment="Center"/>
+
+
+                    <TextBlock Grid.Column="2" Grid.Row="1" Text="Выберите тип кабеля" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+
+
+                    <ComboBox Grid.Column="3"
+                              Grid.Row="1"
+                              Margin="5"
+                              ItemsSource="{Binding ListCableTypeGraphics}"
+                              SelectedItem="{Binding SelecteditemCableTypeGraphics, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                    <Button Grid.Column="6"
+                            Grid.Row="1"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#499FFB"
+                        Content="НАЗНАЧИТЬ ТИП КАБЕЛЯ"
+                        Margin="5"
+                        Command="{Binding SetCabelType}"/>
+
+
+
+
+
                 </Grid>
             </GroupBox>
         </DockPanel>
@@ -186,7 +223,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" 
                         BorderThickness="0"
-                        Margin="0,0,1,0"
+                        Margin="1,0,0,0"
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="ПЕРЕЗАПИСАТЬ ТИП КАБЕЛЯ"
@@ -194,7 +231,7 @@
                 </Button>
                 <Button Grid.Column="1" 
                         BorderThickness="0"
-                        Margin="0,0,1,0"
+                        Margin="1,0,1,0"
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="ПЕРЕЗАПИСАТЬ НОМЕР ГРУППЫ"
