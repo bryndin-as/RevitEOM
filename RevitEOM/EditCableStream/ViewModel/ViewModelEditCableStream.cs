@@ -54,8 +54,6 @@ namespace EditCableStream.ViewModel
             set => Set(ref _Check, value);
         }
 
-
-
         private string _TextToFilter = string.Empty;
 
         public string TextToFilter
@@ -64,6 +62,94 @@ namespace EditCableStream.ViewModel
             set => Set(ref _TextToFilter, value);
         }
 
+
+        private string _TextToCurGroupNamber = string.Empty;
+
+        public string TextToCurGroupNamber
+        {
+            get => _TextToCurGroupNamber;
+            set => Set(ref _TextToCurGroupNamber, value);
+        }
+
+        private string _TextToNewGroupNumber = string.Empty;
+
+        public string TextToNewGroupNumber
+        {
+            get => _TextToNewGroupNumber;
+            set => Set(ref _TextToNewGroupNumber, value);
+        }
+
+
+        private List<ElementId> _FamilyInstanseOnView;
+
+        public List<ElementId> FamilyInstanseOnView
+        {
+            get => _FamilyInstanseOnView;
+            set => Set(ref _FamilyInstanseOnView, value);
+        }
+
+
+        #region Старые свойства
+        //private List<ElementId> _CabelTypesFR;
+
+        //public List<ElementId> CabelTypesFR
+        //{
+        //    get => _CabelTypesFR;
+        //    set => Set(ref _CabelTypesFR, value);
+        //}
+
+        //private List<ElementId> _CabelTypes;
+
+        //public List<ElementId> CabelTypes
+        //{
+        //    get => _CabelTypes;
+        //    set => Set(ref _CabelTypes, value);
+        //}
+
+        //private List<Parameter> _ListGroupNumberParam;
+
+        //public List<Parameter> ListGroupNumberParam
+        //{
+        //    get => _ListGroupNumberParam;
+        //    set => Set(ref _ListGroupNumberParam, value);
+        //} 
+        #endregion
+
+        private List<string> _ListCaleTypeFRName;
+
+        public List<string> ListCaleTypeFRName
+        {
+            get => _ListCaleTypeFRName;
+            set => Set(ref _ListCaleTypeFRName, value);
+        }
+
+
+        private List<string> _ListCaleTypeName;
+
+        public List<string> ListCaleTypeName
+        {
+            get => _ListCaleTypeName;
+            set => Set(ref _ListCaleTypeName, value);
+        }
+
+
+        private List<string> _ListCableTypeGraphics;
+
+        public List<string> ListCableTypeGraphics
+        {
+            get => _ListCableTypeGraphics;
+            set => Set(ref _ListCableTypeGraphics, value);
+        }
+
+
+
+        private string _SelecteditemCableTypeGraphics;
+
+        public string SelecteditemCableTypeGraphics
+        {
+            get => _SelecteditemCableTypeGraphics;
+            set => Set(ref _SelecteditemCableTypeGraphics, value);
+        }
 
 
         private ICollectionView _Cablecollection;
@@ -84,7 +170,10 @@ namespace EditCableStream.ViewModel
         #endregion
 
         #region Command
-        public LambdaCommand<object> EditCableStreamTest { get; set; }
+        public LambdaCommand<object> EditCableType { get; set; }
+        public LambdaCommand<object> EditCableGroupNumber { get; set; }
+        public LambdaCommand<object> SetGroupNumber { get; set; }
+        public LambdaCommand<object> SetCabelType { get; set; }
         public LambdaCommand<object> FilterCable { get; set; }
         #endregion
 
@@ -97,138 +186,142 @@ namespace EditCableStream.ViewModel
             List<ElementId> CurrentFamilys = new FilteredElementCollector(Doc).OfClass(typeof(FamilyInstance))
                                                                       .OfCategory(BuiltInCategory.OST_ElectricalFixtures)
                                                                       .Cast<FamilyInstance>()
-                                                                      .Where(it => it.Name.Contains("Г_Поток_FR")) //Г_Поток_FRLS
+                                                                      .Where(it => it.Symbol.FamilyName.Contains("ASML_ЭОМ_КЛ_"))
                                                                       .Select(it => it.Id)
                                                                       .ToList();
+            FamilyInstanseOnView = CurrentFamilys;
 
-            List<ElementId> CabelTypesFR = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
-                                                                      .Cast<FamilySymbol>()
-                                                                      .Where(it => it.FamilyName == "Кабель_FR_Графика") // Кабель_Графика_FRLS_ОснЛиния
-                                                                      .Select(it => it.Id)
-                                                                      .ToList();
 
-            ObservableCollection<CableParameter> ViewDataCollection = new ObservableCollection<CableParameter>();
-            List<string> ViewDataCollectionType = new List<string>();
-            List<Parameter> ViewDataCollectionGroupNumberParam = new List<Parameter>();
-            //List<string> ViewDataCollectionGroupNumberValue = new List<string>();
+            #region Старое получение
+            //List<ElementId> CabelTypesList = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
+            //                                                         .Cast<FamilySymbol>()
+            //                                                         .Where(it => it.FamilyName == "Кабель_Графика")
+            //                                                         .Select(it => it.Id)
+            //                                                         .ToList();
 
-            foreach (var FamTypeFR in CabelTypesFR)
+            //CabelTypes = CabelTypesList;
+
+            //List<ElementId> CabelTypesFRList = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
+            //                                                          .Cast<FamilySymbol>()
+            //                                                          .Where(it => it.FamilyName == "Кабель_FR_Графика")
+            //                                                          .Select(it => it.Id)
+            //                                                          .ToList();
+
+            //CabelTypesFR = CabelTypesFRList; 
+            #endregion
+
+            List<string> CableTypeGraphics = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
+                                                                    .Cast<FamilySymbol>()
+                                                                    .Where(it => it.FamilyName.Contains("Графика"))
+                                                                    .Select(it => it.Name)
+                                                                    .ToList();
+
+            ListCableTypeGraphics = CableTypeGraphics;
+
+
+
+            foreach (var item in ListCableTypeGraphics)
             {
-                Element elem = Doc.GetElement(FamTypeFR);
-                ViewDataCollectionType.Add(elem.Name);
-            }
-            ViewDataCollectionType.Sort();
-            List<string> ListCaleType = ViewDataCollectionType.Distinct().ToList();
 
-
-            foreach (var CurFam in CurrentFamilys)
-            {
-                Element elem = Doc.GetElement(CurFam);
-                foreach (Parameter ParamGroupNumber in elem.Parameters)
+                if (item == "Нет")
                 {
-                    if (ParamGroupNumber.Definition.Name.Contains("_Номер группы"))
-                    {
-                        ViewDataCollectionGroupNumberParam.Add(ParamGroupNumber);
-                    }
+                    SelecteditemCableTypeGraphics = item;
+                }
+                if (item == "Нет FR")
+                {
+                    SelecteditemCableTypeGraphics = item;
                 }
             }
-            #region Old
-            //провекра
-            //foreach (var CurFam in CurrentFamilys)
+
+            ObservableCollection<CableParameter> ViewDataCollection = new ObservableCollection<CableParameter>();
+
+            #region Старое
+            //List<Parameter> ViewDataCollectionGroupNumberParamList = new List<Parameter>();
+            //List<string> ViewDataCollectionType = new List<string>();
+            //List<string> ViewDataCollectionTypeFR = new List<string>();
+
+
+            //foreach (var FamType in CabelTypes)
+            //{
+            //    Element elem = Doc.GetElement(FamType);
+            //    ViewDataCollectionType.Add(elem.Name);
+            //}
+            //ViewDataCollectionType.Sort();
+            //ListCaleTypeName = ViewDataCollectionType.Distinct().ToList();
+
+
+            //foreach (var FamTypeFR in CabelTypesFR)
+            //{
+            //    Element elem = Doc.GetElement(FamTypeFR);
+            //    ViewDataCollectionTypeFR.Add(elem.Name);
+            //}
+            //ViewDataCollectionTypeFR.Sort();
+            //ListCaleTypeFRName = ViewDataCollectionTypeFR.Distinct().ToList(); 
+
+            //foreach (var CurFam in FamilyInstanseOnView)
             //{
             //    Element elem = Doc.GetElement(CurFam);
-            //    foreach (Parameter ParamNameGroupNumber in elem.Parameters)
+            //    foreach (Parameter ParamGroupNumber in elem.Parameters)
             //    {
-            //        if (ParamNameGroupNumber.Definition.Name.Contains("_Номер группы"))
+            //        if (ParamGroupNumber.Definition.Name.Contains("_Номер группы"))
             //        {
-            //            if (ParamNameGroupNumber.AsString() != "")
-            //            {
-            //                ViewDataCollectionGroupNumberValue.Add(ParamNameGroupNumber.AsString());
-            //            }
+            //            ViewDataCollectionGroupNumberParamList.Add(ParamGroupNumber);
             //        }
             //    }
             //}
-            //ViewDataCollectionGroupNumberValue.Sort(); 
+            //ListGroupNumberParam = ViewDataCollectionGroupNumberParamList;
             #endregion
 
-            foreach (var CurFam in CurrentFamilys)
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Поток_ОДН", "Г_Поток_HF", ListCableTypeGraphics); //ListCaleTypeName
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Поток_ОДН", "Г_Поток_LS", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОДН", "Г_Линия_HF", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОДН", "Г_Линия_LS", ListCableTypeGraphics);
+
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Поток_ОКЛ", "Г_Поток_FRHF", ListCableTypeGraphics); //ListCaleTypeFRName
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Поток_ОКЛ", "Г_Поток_FRLS", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОКЛ", "Г_Линия_FRHF", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОКЛ", "Г_Линия_FRLS", ListCableTypeGraphics);
+
+            //DataCollection = ViewDataCollection;
+            Cablecollection = CollectionViewSource.GetDefaultView(DataCollection);
+
+            EditCableType = new LambdaCommand<object>(p => true, p => EditCableTypeAction());
+            EditCableGroupNumber = new LambdaCommand<object>(p => true, p => EditCableGroupNumberAction());
+            SetGroupNumber = new LambdaCommand<object>(p => true, p => SetGroupNumberAction());
+            SetCabelType = new LambdaCommand<object>(p => true, p => SetCabelTypeAction());
+            FilterCable = new LambdaCommand<object>(p => true, p => Filter());
+        }
+
+
+        private void CreateCableStream(ObservableCollection<CableParameter> ViewDataCollection, string FamilyName, string FamilyTypeName, List<string> ListCaleType)
+        {
+            foreach (var CurFam in FamilyInstanseOnView)
             {
                 Element elem = Doc.GetElement(CurFam);
                 FamilyInstance Inst = elem as FamilyInstance;
                 Family Fam = Inst.Symbol.Family;
-
-
-
-                if (Fam.Name == "ASML_ЭОМ_КЛ_Г_Поток_ОКЛ")
+                if (Fam.Name == FamilyName) //"ASML_ЭОМ_КЛ_Г_Поток_ОКЛ"
                 {
-                    if (Inst.Name == "Г_Поток_FRHF")
+                    List<Parameter> FamilyParamGroupNumber = new List<Parameter>();
+                    if(Inst.Name == FamilyTypeName) //"Г_Поток_FRHF"
                     {
                         foreach (Parameter FamilyParam in elem.Parameters)
                         {
-
-                            if (FamilyParam.Definition.Name.Contains("_Тип КЛ"))
+                            if (FamilyParam.Definition.Name.Contains("_Номер группы"))
                             {
-                                #region Lenght
-                                var ElemLen = FamilyParam.Element;
-                                string CableLenghtSegment = string.Empty;
-
-                                foreach (Parameter ParamLenght in ElemLen.Parameters)
-                                {
-                                    if (ParamLenght.Definition.Name == "Длина")
-                                    {
-                                        var ParamLenghtSegment = ParamLenght.AsValueString();
-                                        CableLenghtSegment = ParamLenghtSegment;
-                                    }
-                                }
-
-                                var ElemIdType = FamilyParam.AsElementId();
-                                Element ElemType = Doc.GetElement(ElemIdType);
-                                #endregion
-
-                                if (ElemType.Name != "Нет FR")
-                                {
-                                    string GroupNumber = string.Empty;
-
-                                    foreach (var GroupNumberParam in ViewDataCollectionGroupNumberParam)
-                                    {
-
-                                        if (GroupNumberParam.Element.Name == "Г_Поток_FRHF")
-                                        {
-                                            var GroupNumberName = GroupNumberParam.Definition.Name;
-                                            string[] GroupNumberNamePrefix = GroupNumberName.Split(new char[] { '_' });
-                                            var TypeKLNamePrefix = FamilyParam.Definition.Name.Split('_');
-
-                                            if (TypeKLNamePrefix[0].Equals(GroupNumberNamePrefix[0]))
-                                            {
-                                                GroupNumber = GroupNumberParam.AsString();
-                                            }
-                                        }
-
-
-                                    }
-                                    ViewDataCollection.Add(new CableParameter()
-                                    {
-                                        Id = elem.Id.IntegerValue,
-                                        NumberKL = FamilyParam.Definition.Name,
-                                        CableType = ListCaleType,
-                                        SelecteditemCableType = ElemType.Name,
-                                        GroupNumber = GroupNumber,
-                                        CableLength = CableLenghtSegment
-
-                                    });
-                                }
+                                FamilyParamGroupNumber.Add(FamilyParam);
                             }
                         }
-
                     }
-                    if (Inst.Name == "Г_Поток_FRLS")
+
+                    if (Inst.Name == FamilyTypeName) //"Г_Поток_FRHF"
                     {
+                       
                         foreach (Parameter FamilyParam in elem.Parameters)
                         {
-
+                            
                             if (FamilyParam.Definition.Name.Contains("_Тип КЛ"))
                             {
-                                #region Lenght
                                 var ElemLen = FamilyParam.Element;
                                 string CableLenghtSegment = string.Empty;
 
@@ -243,16 +336,13 @@ namespace EditCableStream.ViewModel
 
                                 var ElemIdType = FamilyParam.AsElementId();
                                 Element ElemType = Doc.GetElement(ElemIdType);
-                                #endregion
+                                string GroupNumber = string.Empty;
 
-                                if (ElemType.Name != "Нет FR")
+                                foreach (var GroupNumberParam in FamilyParamGroupNumber) 
                                 {
-                                    string GroupNumber = string.Empty;
-
-                                    foreach (var GroupNumberParam in ViewDataCollectionGroupNumberParam)
+                                    if (GroupNumberParam.AsString() != string.Empty)
                                     {
-
-                                        if (GroupNumberParam.Element.Name == "Г_Поток_FRLS")
+                                        if (GroupNumberParam.Element.Name == FamilyTypeName) //"Г_Поток_FRHF"
                                         {
                                             var GroupNumberName = GroupNumberParam.Definition.Name;
                                             string[] GroupNumberNamePrefix = GroupNumberName.Split(new char[] { '_' });
@@ -263,9 +353,11 @@ namespace EditCableStream.ViewModel
                                                 GroupNumber = GroupNumberParam.AsString();
                                             }
                                         }
-
-
                                     }
+                                }
+
+                                if (GroupNumber != string.Empty)
+                                {
                                     ViewDataCollection.Add(new CableParameter()
                                     {
                                         Id = elem.Id.IntegerValue,
@@ -274,22 +366,15 @@ namespace EditCableStream.ViewModel
                                         SelecteditemCableType = ElemType.Name,
                                         GroupNumber = GroupNumber,
                                         CableLength = CableLenghtSegment
-
                                     });
+                                    DataCollection = ViewDataCollection;
                                 }
                             }
                         }
                     }
                 }
-
             }
-            DataCollection = ViewDataCollection;
-            Cablecollection = CollectionViewSource.GetDefaultView(DataCollection);
-
-            EditCableStreamTest = new LambdaCommand<object>(p => true, p => EditCableStreamTestAction());
-            FilterCable = new LambdaCommand<object>(p => true, p => Filter());
         }
-
 
         private bool Filter()
         {
@@ -307,36 +392,94 @@ namespace EditCableStream.ViewModel
             return true;
         }
 
-        private void EditCableStreamTestAction()
+        private void EditCableTypeAction()
         {
             foreach (var datacoll in DataCollection)
             {
-                var SelTypeFamily = datacoll.SelecteditemCableType;
-                var group = datacoll.NumberKL;
+                string SelTypeFamily = datacoll.SelecteditemCableType;
+                string NumberKL = datacoll.NumberKL;
 
                 Element elem = Doc.GetElement(new ElementId(datacoll.Id));
-                ParameterSet ps = elem.Parameters;
+                ParameterSet ParamNames = elem.Parameters;
 
-                foreach (Parameter p in ps)
+                foreach (Parameter ParamName in ParamNames)
                 {
-                    if (p.Definition.Name == group)
+                    if (ParamName.Definition.Name == NumberKL)
                     {
                         ElementId FamilyTapesID = new FilteredElementCollector(Doc).OfClass(typeof(FamilySymbol))
                                                                      .Cast<FamilySymbol>()
-                                                                     .Where(it => it.FamilyName == "Кабель_FR_Графика")
+                                                                     .Where(it => it.FamilyName.Contains("Графика"))
                                                                      .Where(it => it.Name == SelTypeFamily)
                                                                      .Select(it => it.Id)
                                                                      .FirstOrDefault();
+
                         using (Transaction transaction = new Transaction(Doc))
                         {
                             transaction.Start("Перезапись параметров");
-                            p.Set(FamilyTapesID);
+                            ParamName.Set(FamilyTapesID);
                             transaction.Commit();
                         }
                     }
                 }
             }
-            TaskDialog.Show("INFO", "Готово");
+            TaskDialog.Show("INFO", "Тип кабеля изменен");
+        }
+
+        private void EditCableGroupNumberAction()
+        {
+            foreach (var datacoll in DataCollection)
+            {
+                string CurGroupNumber = datacoll.GroupNumber;
+                string NumberKL = datacoll.NumberKL;
+                string[] NumberKLSplit = NumberKL.Split('_');
+                string PreficsNumber = NumberKLSplit[0];
+
+                Element elem = Doc.GetElement(new ElementId(datacoll.Id));
+                ParameterSet ParamNames = elem.Parameters;
+
+                foreach (Parameter ParamName in ParamNames)
+                {
+
+                    if (ParamName.Definition.Name == $"{PreficsNumber}_Номер группы") 
+                    {
+
+                        using (Transaction transaction = new Transaction(Doc))
+                        {
+                            transaction.Start("Перезапись параметров");
+                            ParamName.Set(CurGroupNumber);
+                            transaction.Commit();
+                        }
+
+                    }
+                    
+                }
+            }
+            TaskDialog.Show("INFO", "Номер группы изменен");
+        }
+
+        private void SetGroupNumberAction()
+        {
+            foreach (var datacoll in DataCollection)
+            {
+                if (TextToCurGroupNamber == datacoll.GroupNumber)
+                {
+                    datacoll.GroupNumber = TextToNewGroupNumber;
+                }
+            }
+            Cablecollection.Refresh();
+        }
+
+        private void SetCabelTypeAction()
+        {
+            foreach (var datacoll in DataCollection)
+            {
+                if (TextToCurGroupNamber == datacoll.GroupNumber)
+                {
+                    datacoll.SelecteditemCableType = SelecteditemCableTypeGraphics;
+                }
+            }
+            Cablecollection.Refresh();
         }
     }
 }
+
