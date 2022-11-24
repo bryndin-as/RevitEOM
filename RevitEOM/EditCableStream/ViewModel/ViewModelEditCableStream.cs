@@ -320,12 +320,18 @@ namespace EditCableStream.ViewModel
                         foreach (Parameter FamilyParam in elem.Parameters)
                         {
                             
+
                             if (FamilyParam.Definition.Name.Contains("_Тип КЛ"))
                             {
-                                var ElemLen = FamilyParam.Element;
+                                string par = FamilyParam.Definition.Name;
+                                string[] parsplit = par.Split('_');
+                                string parprefics = parsplit[0];
+
+
+                                var Elem = FamilyParam.Element;
                                 string CableLenghtSegment = string.Empty;
 
-                                foreach (Parameter ParamLenght in ElemLen.Parameters)
+                                foreach (Parameter ParamLenght in Elem.Parameters)
                                 {
                                     if (ParamLenght.Definition.Name == "Длина")
                                     {
@@ -333,6 +339,30 @@ namespace EditCableStream.ViewModel
                                         CableLenghtSegment = ParamLenghtSegment;
                                     }
                                 }
+
+                                string paramname = string.Empty;
+
+                                foreach (Parameter ParamPanel in Elem.Parameters)
+                                {
+                                    if (ParamPanel.Definition.Name.Contains("_Имя панели"))
+                                    {
+                                        string parampan = ParamPanel.Definition.Name;
+                                        string[] parampansplit = parampan.Split('_');
+                                        string parampanprefics = parampansplit[0];
+
+                                        if (parprefics == parampanprefics)
+                                        {
+                                            var ParamPanelName = ParamPanel.AsString();
+                                            paramname = ParamPanelName;
+                                        }
+
+                                    }
+                                }
+
+
+
+
+
 
                                 var ElemIdType = FamilyParam.AsElementId();
                                 Element ElemType = Doc.GetElement(ElemIdType);
@@ -365,7 +395,8 @@ namespace EditCableStream.ViewModel
                                         CableType = ListCaleType,
                                         SelecteditemCableType = ElemType.Name,
                                         GroupNumber = GroupNumber,
-                                        CableLength = CableLenghtSegment
+                                        CableLength = CableLenghtSegment,
+                                        PanelName = paramname
                                     });
                                     DataCollection = ViewDataCollection;
                                 }
