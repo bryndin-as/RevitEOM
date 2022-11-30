@@ -17,5 +17,7 @@ namespace RevitEOM.EditCableStream.Model
         //public ICollection<string> GroupNumber { get; set; }
         public string GroupNumber { get; set; }
         public string CableLength { get; set; }
+        public string PanelName { get; set; }
+        public string Сomments { get; set; }
     }
 }

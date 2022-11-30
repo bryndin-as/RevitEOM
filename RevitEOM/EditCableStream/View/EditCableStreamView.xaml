@@ -180,19 +180,22 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn
-                    MinWidth="100"
-                    Width="200"
-                    Header="ID Семейства" 
-                    Binding="{Binding Id}" 
-                    IsReadOnly="True"/>
                 <DataGridTextColumn 
-                    MinWidth="100"
                     Width="*"
-                    Header="Номер КЛ" 
-                    Binding="{Binding NumberKL}" 
-                    IsReadOnly="True" />
-                <DataGridTemplateColumn Header="Тип кабеля" Width="2*">
+                    Header="Имя Щита" 
+                    Binding="{Binding PanelName}" 
+                    />
+                <DataGridTextColumn 
+                    Width="*"
+                    Header="Номер группы" 
+                    Binding="{Binding GroupNumber}" 
+                    />
+                <DataGridTextColumn 
+                    Width="*"
+                    Header="Марка" 
+                    Binding="{Binding Сomments}" 
+                    />
+                <DataGridTemplateColumn Header="Тип кабеля" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate >
                             <ComboBox ItemsSource="{Binding CableType}" 
@@ -202,16 +205,32 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                
                 <DataGridTextColumn 
+                    MinWidth="100"
                     Width="*"
-                    Header="Номер группы" 
-                    Binding="{Binding GroupNumber}" 
-                    />
+                    Header="Номер КЛ" 
+                    Binding="{Binding NumberKL}" 
+                    IsReadOnly="True" 
+                    Visibility="Hidden"/>
                 <DataGridTextColumn 
                     Width="*"
                     Header="Длина кабеля" 
                     Binding="{Binding CableLength}" 
+                    IsReadOnly="True"
+                     Visibility="Hidden"/>
+                
+                <DataGridTextColumn
+                   Width="*"
+                    Header="ID Семейства" 
+                    Binding="{Binding Id}" 
                     IsReadOnly="True"/>
+                
+                
+                
+                
+                
+                
             </DataGrid.Columns>
         </DataGrid>
         <DockPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" LastChildFill="True">

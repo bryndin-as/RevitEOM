@@ -219,6 +219,13 @@ namespace EditCableStream.ViewModel
             ListCableTypeGraphics = CableTypeGraphics;
 
 
+            //List<ElementId> InstCableTypeGraphics = new FilteredElementCollector(Doc).OfClass(typeof(FamilyInstance))
+            //                                                       .Cast<FamilyInstance>()
+            //                                                       .Where(it => it.Symbol.FamilyName.Contains("Графика"))
+            //                                                       .Select(it => it.Id)
+            //                                                       .ToList();
+
+
 
             foreach (var item in ListCableTypeGraphics)
             {
@@ -282,6 +289,17 @@ namespace EditCableStream.ViewModel
             CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОКЛ", "Г_Линия_FRHF", ListCableTypeGraphics);
             CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_Г_Линия_ОКЛ", "Г_Линия_FRLS", ListCableTypeGraphics);
 
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Поток_ОДН", "В_Поток_HF", ListCableTypeGraphics); //Добавить высота этажа
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Поток_ОДН", "В_Поток_LS", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Линия_ОДН", "В_Линия_HF", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Линия_ОДН", "В_Линия_LS", ListCableTypeGraphics);
+
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Поток_ОКЛ", "В_Поток_FRHF", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Поток_ОКЛ", "В_Поток_FRLS", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Линия_ОКЛ", "В_Линия_FRHF", ListCableTypeGraphics);
+            CreateCableStream(ViewDataCollection, "ASML_ЭОМ_КЛ_В_Линия_ОКЛ", "В_Линия_FRLS", ListCableTypeGraphics);
+
+
             //DataCollection = ViewDataCollection;
             Cablecollection = CollectionViewSource.GetDefaultView(DataCollection);
 
@@ -302,8 +320,10 @@ namespace EditCableStream.ViewModel
                 Family Fam = Inst.Symbol.Family;
                 if (Fam.Name == FamilyName) //"ASML_ЭОМ_КЛ_Г_Поток_ОКЛ"
                 {
+
+
                     List<Parameter> FamilyParamGroupNumber = new List<Parameter>();
-                    if(Inst.Name == FamilyTypeName) //"Г_Поток_FRHF"
+                    if (Inst.Name == FamilyTypeName) //"Г_Поток_FRHF"
                     {
                         foreach (Parameter FamilyParam in elem.Parameters)
                         {
@@ -316,16 +336,51 @@ namespace EditCableStream.ViewModel
 
                     if (Inst.Name == FamilyTypeName) //"Г_Поток_FRHF"
                     {
-                       
+
+                        ICollection<ElementId> subElements = Inst.GetSubComponentIds();
+
                         foreach (Parameter FamilyParam in elem.Parameters)
                         {
-                            
                             if (FamilyParam.Definition.Name.Contains("_Тип КЛ"))
                             {
-                                var ElemLen = FamilyParam.Element;
-                                string CableLenghtSegment = string.Empty;
+                                string par = FamilyParam.Definition.Name;
+                                string[] parsplit = par.Split('_');
+                                string parprefics = parsplit[0];
+                                Element Elem = FamilyParam.Element;
 
-                                foreach (Parameter ParamLenght in ElemLen.Parameters)
+                                var elemIdParamTypeKL = FamilyParam.AsElementId();
+                                Element elemTypeKL = Doc.GetElement(elemIdParamTypeKL);
+                                var elemNameTypeKL = elemTypeKL.Name;
+                                string subElemName = string.Empty;
+                                string comment = string.Empty;
+
+                                //if (elemNameTypeKL != "Нет" && elemNameTypeKL != "Нет FR") //|| elemNameTypeKL != "Нет" &&
+                                //{
+                                var tempsubElemName = ReplaceSubstringLatin(elemNameTypeKL);
+                                subElemName = tempsubElemName;
+
+
+                                foreach (var subfamily in subElements)
+                                {
+                                    Element subElem = Doc.GetElement(subfamily);
+
+                                    foreach (Parameter paramcom in subElem.Parameters)
+                                    {
+                                        if (paramcom.Definition.Name == "ASML_Комментарии")
+                                        {
+                                            string commentName = paramcom.AsString();
+                                            string temoComName = ReplaceSubstringLatin(commentName);
+                                            if (temoComName.Contains(subElemName)) //elemNameTypeKL != "Нет" &&
+                                            {
+                                                comment = commentName;
+                                            }
+                                        }
+                                    }
+                                }
+                                //}
+
+                                string CableLenghtSegment = string.Empty;
+                                foreach (Parameter ParamLenght in Elem.Parameters)
                                 {
                                     if (ParamLenght.Definition.Name == "Длина")
                                     {
@@ -334,11 +389,29 @@ namespace EditCableStream.ViewModel
                                     }
                                 }
 
+                                string paramname = string.Empty;
+                                foreach (Parameter ParamPanel in Elem.Parameters)
+                                {
+                                    if (ParamPanel.Definition.Name.Contains("_Имя панели"))
+                                    {
+                                        string parampan = ParamPanel.Definition.Name;
+                                        string[] parampansplit = parampan.Split('_');
+                                        string parampanprefics = parampansplit[0];
+
+                                        if (parprefics == parampanprefics)
+                                        {
+                                            var ParamPanelName = ParamPanel.AsString();
+                                            paramname = ParamPanelName;
+                                        }
+
+                                    }
+                                }
+
                                 var ElemIdType = FamilyParam.AsElementId();
                                 Element ElemType = Doc.GetElement(ElemIdType);
                                 string GroupNumber = string.Empty;
 
-                                foreach (var GroupNumberParam in FamilyParamGroupNumber) 
+                                foreach (var GroupNumberParam in FamilyParamGroupNumber)
                                 {
                                     if (GroupNumberParam.AsString() != string.Empty)
                                     {
@@ -365,7 +438,9 @@ namespace EditCableStream.ViewModel
                                         CableType = ListCaleType,
                                         SelecteditemCableType = ElemType.Name,
                                         GroupNumber = GroupNumber,
-                                        CableLength = CableLenghtSegment
+                                        CableLength = CableLenghtSegment,
+                                        PanelName = paramname,
+                                        Сomments = comment
                                     });
                                     DataCollection = ViewDataCollection;
                                 }
@@ -375,6 +450,63 @@ namespace EditCableStream.ViewModel
                 }
             }
         }
+
+
+        public static string ReplaceSubstringLatin(string strSource)
+        {
+
+            //Возвращаем Латиницу (красная)
+            if (strSource.Contains("x")) // Латиница
+            {
+                if (strSource.Contains("ПуВ"))
+                {
+                    strSource = strSource.Replace("ПуВ", "").Trim();
+                    return strSource;
+                }
+
+                if (strSource.Contains("FR"))
+                {
+                    strSource = strSource.Replace("FR", "").Trim();
+                    return strSource;
+                }
+
+                char[] ar = strSource.ToArray<char>();
+                int StartLat = strSource.IndexOf("x") - 1; // Латинца
+                int EndLat = ar.Length - StartLat;
+                var segment = new ArraySegment<char>(ar, StartLat, EndLat);
+                strSource = (String.Join("", segment));
+                return strSource;
+
+            }
+            else if (strSource.Contains("х")) //Кирилица
+            {
+
+                if (strSource.Contains("ПуВ"))
+                {
+                    strSource = strSource.Replace("х", "x"); // х (кирилица зеленая) x (латиницы красная)
+                    strSource = strSource.Replace("ПуВ", "").Trim();
+                    return strSource;
+                }
+
+                if (strSource.Contains("FR"))
+                {
+                    strSource = strSource.Replace("х", "x"); // х (кирилица зеленая) x (латиницы красная)
+                    strSource = strSource.Replace("FR", "").Trim();
+                    return strSource;
+                }
+
+                int StartKir = strSource.IndexOf("х") - 1; // Кирилица
+                strSource = strSource.Replace("х", "x"); // х (кирилица зеленая) x (латиницы красная)
+                char[] ar = strSource.ToArray<char>();
+                int EndKir = ar.Length - StartKir;
+                var segment = new ArraySegment<char>(ar, StartKir, EndKir);
+                strSource = (String.Join("", segment));
+                return strSource;
+
+            }
+            return strSource;
+        }
+
 
         private bool Filter()
         {
@@ -387,7 +519,7 @@ namespace EditCableStream.ViewModel
             if (!string.IsNullOrEmpty(TextToFilter))
             {
                 var Cab = obj as CableParameter;
-                return Cab != null && Cab.GroupNumber.Contains(TextToFilter);
+                return Cab != null && Cab.GroupNumber == TextToFilter;
             }
             return true;
         }
@@ -415,7 +547,7 @@ namespace EditCableStream.ViewModel
 
                         using (Transaction transaction = new Transaction(Doc))
                         {
-                            transaction.Start("Перезапись параметров");
+                            transaction.Start("Перезапись типа кабеля");
                             ParamName.Set(FamilyTapesID);
                             transaction.Commit();
                         }
@@ -440,18 +572,18 @@ namespace EditCableStream.ViewModel
                 foreach (Parameter ParamName in ParamNames)
                 {
 
-                    if (ParamName.Definition.Name == $"{PreficsNumber}_Номер группы") 
+                    if (ParamName.Definition.Name == $"{PreficsNumber}_Номер группы")
                     {
 
                         using (Transaction transaction = new Transaction(Doc))
                         {
-                            transaction.Start("Перезапись параметров");
+                            transaction.Start("Перезапись номера группы");
                             ParamName.Set(CurGroupNumber);
                             transaction.Commit();
                         }
 
                     }
-                    
+
                 }
             }
             TaskDialog.Show("INFO", "Номер группы изменен");
