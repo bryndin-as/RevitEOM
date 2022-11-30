@@ -192,9 +192,8 @@
                     />
                 <DataGridTextColumn 
                     Width="*"
-                    
-                    Header="Комментарии" 
-                    Binding="{Binding GroupNumber}" 
+                    Header="Марка" 
+                    Binding="{Binding Сomments}" 
                     />
                 <DataGridTemplateColumn Header="Тип кабеля" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -213,12 +212,13 @@
                     Header="Номер КЛ" 
                     Binding="{Binding NumberKL}" 
                     IsReadOnly="True" 
-                    />
+                    Visibility="Hidden"/>
                 <DataGridTextColumn 
                     Width="*"
                     Header="Длина кабеля" 
                     Binding="{Binding CableLength}" 
-                    IsReadOnly="True"/>
+                    IsReadOnly="True"
+                     Visibility="Hidden"/>
                 
                 <DataGridTextColumn
                    Width="*"

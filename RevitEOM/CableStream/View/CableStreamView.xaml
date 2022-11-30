@@ -17,7 +17,7 @@
         <UniformGrid  Grid.Row="0" Rows="0" Columns="1">
             
             
-            <Button Margin="2" Content="Кнопка">
+            <Button Margin="2" Content="Замена кабеля" Command="{Binding CableStreamTest}">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="3"/>

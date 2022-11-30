@@ -14,6 +14,7 @@ using EditCableStream.ViewModel;
 [Transaction(TransactionMode.Manual)]
 class EditCableStreamCommand : IExternalCommand
 {
+    public static string commandVersion = "1.0.0.0";
     public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
     {
         var uidoc = commandData.Application.ActiveUIDocument;
