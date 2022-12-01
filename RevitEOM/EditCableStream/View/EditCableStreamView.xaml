@@ -49,9 +49,9 @@
                         BorderThickness="0"
                         Foreground="White"                        
                         Background="#499FFB"
-                        Content="ВЫДЕЛИТЬ"
+                        Content="ВЫБРАТЬ"
                         Margin="0.5,5,0.5,5"
-                       />
+                       Command="{Binding SelectElementOnView, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Grid.Column="4"
                         BorderThickness="0"
                         Foreground="White"                        

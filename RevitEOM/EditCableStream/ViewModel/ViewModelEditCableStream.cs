@@ -185,6 +185,7 @@ namespace EditCableStream.ViewModel
         public LambdaCommand<object> SetCabelType { get; set; }
         public LambdaCommand<object> FilterCable { get; set; }
         public LambdaCommand<object> IsolationElementOnView { get; set; }
+        public LambdaCommand<object> SelectElementOnView { get; set; }
         #endregion
 
 
@@ -319,6 +320,7 @@ namespace EditCableStream.ViewModel
             SetCabelType = new LambdaCommand<object>(p => true, p => SetCabelTypeAction());
             FilterCable = new LambdaCommand<object>(p => true, p => Filter());
             IsolationElementOnView = new LambdaCommand<object>(p => true, p => IsolationElementOnViewAction());
+            SelectElementOnView = new LambdaCommand<object>(p => true, p => SelectElementOnViewAction());
         }
 
 
@@ -592,9 +594,7 @@ namespace EditCableStream.ViewModel
                             ParamName.Set(CurGroupNumber);
                             transaction.Commit();
                         }
-
                     }
-
                 }
             }
             TaskDialog.Show("INFO", "Номер группы изменен");
@@ -642,6 +642,28 @@ namespace EditCableStream.ViewModel
             {
                 transaction.Start("Изолироваиние кабеля");
                 view.IsolateElementsTemporary(elemIdColl);
+                transaction.Commit();
+            }
+        }
+
+        private void SelectElementOnViewAction()
+        {
+            Autodesk.Revit.DB.View view = Doc.ActiveView;
+            Cablecollection = CollectionViewSource.GetDefaultView(DataCollection);
+            Cablecollection.Filter = FilterGroupNumber;
+            List<ElementId> elemIdColl = new List<ElementId>();
+
+            foreach (var datacoll in Cablecollection)
+            {
+                var elem = datacoll as CableParameter;
+                ElementId elemId = new ElementId(elem.Id);
+                elemIdColl.Add(elemId);
+            }
+
+            using (Transaction transaction = new Transaction(Doc))
+            {
+                transaction.Start("Изолироваиние кабеля");
+                UIdoc.Selection.SetElementIds(elemIdColl);
                 transaction.Commit();
             }
         }
