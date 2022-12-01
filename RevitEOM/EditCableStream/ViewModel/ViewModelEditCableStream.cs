@@ -71,6 +71,15 @@ namespace EditCableStream.ViewModel
             set => Set(ref _TextToCurGroupNamber, value);
         }
 
+        private string _TextToCurGroupNamber_2 = string.Empty;
+
+        public string TextToCurGroupNamber_2
+        {
+            get => _TextToCurGroupNamber_2;
+            set => Set(ref _TextToCurGroupNamber_2, value);
+        }
+
+
         private string _TextToNewGroupNumber = string.Empty;
 
         public string TextToNewGroupNumber
@@ -175,6 +184,7 @@ namespace EditCableStream.ViewModel
         public LambdaCommand<object> SetGroupNumber { get; set; }
         public LambdaCommand<object> SetCabelType { get; set; }
         public LambdaCommand<object> FilterCable { get; set; }
+        public LambdaCommand<object> IsolationElementOnView { get; set; }
         #endregion
 
 
@@ -308,6 +318,7 @@ namespace EditCableStream.ViewModel
             SetGroupNumber = new LambdaCommand<object>(p => true, p => SetGroupNumberAction());
             SetCabelType = new LambdaCommand<object>(p => true, p => SetCabelTypeAction());
             FilterCable = new LambdaCommand<object>(p => true, p => Filter());
+            IsolationElementOnView = new LambdaCommand<object>(p => true, p => IsolationElementOnViewAction());
         }
 
 
@@ -605,13 +616,34 @@ namespace EditCableStream.ViewModel
         {
             foreach (var datacoll in DataCollection)
             {
-                if (TextToCurGroupNamber == datacoll.GroupNumber)
+                if (TextToCurGroupNamber_2 == datacoll.GroupNumber)
                 {
                     datacoll.SelecteditemCableType = SelecteditemCableTypeGraphics;
                 }
             }
             Cablecollection.Refresh();
         }
+
+        private void IsolationElementOnViewAction()
+        {
+            Autodesk.Revit.DB.View view = Doc.ActiveView;
+            Cablecollection = CollectionViewSource.GetDefaultView(DataCollection);
+            Cablecollection.Filter = FilterGroupNumber;
+            List<ElementId> elemIdColl = new List<ElementId>();
+           
+            foreach (var datacoll in Cablecollection)
+            {
+                var elem = datacoll as CableParameter;
+                ElementId elemId = new ElementId(elem.Id);
+                elemIdColl.Add(elemId);
+            }
+
+            using (Transaction transaction = new Transaction(Doc))
+            {
+                transaction.Start("Изолироваиние кабеля");
+                view.IsolateElementsTemporary(elemIdColl);
+                transaction.Commit();
+            }
+        }
     }
 }
-

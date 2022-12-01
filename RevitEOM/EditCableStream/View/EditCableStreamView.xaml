@@ -7,7 +7,7 @@
         xmlns:utilities="clr-namespace:Utilities" 
         xmlns:viewmodel="clr-namespace:EditCableStream.ViewModel" 
         d:DataContext="{d:DesignInstance Type=viewmodel:ViewModelEditCableStream}"
-        mc:Ignorable="d" Width="800" Height="600" MinHeight="500" MinWidth="500" 
+        mc:Ignorable="d" Width="800" Height="600" MinHeight="500" MinWidth="800"  MaxWidth="800" ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen"
         Title="Корректировка сечений кабеля">
 
@@ -29,21 +29,36 @@
                         <ColumnDefinition Width="140" />
                         <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Введите номер группы:" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
-                    <TextBox x:Name="FilterGroupNumber" Grid.Column="1" HorizontalAlignment="Stretch"  
-                     Grid.ColumnSpan="4"
-                     Width="Auto"
-                     Margin="5"
+                    <TextBlock Grid.Column="0" Text="Введите номер группы" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="FilterGroupNumber" Grid.Column="1" HorizontalAlignment="Left"
+                     Width="248"
+                     Margin="5,5,0,5"
                      VerticalContentAlignment="Center"
                      Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Column="5"
+                    <Button Grid.Column="2"
                         BorderThickness="0"
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="ПОКАЗАТЬ"
-                        Margin="5"
+                        Margin="1,5,0.5,5"
                         Command="{Binding FilterCable, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Grid.Column="3"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#499FFB"
+                        Content="ВЫДЕЛИТЬ"
+                        Margin="0.5,5,0.5,5"
+                       />
+                    <Button Grid.Column="4"
+                        BorderThickness="0"
+                        Foreground="White"                        
+                        Background="#499FFB"
+                        Content="ИЗОЛИРОВАТЬ"
+                        Margin="0,5,5,5"
+                       Command="{Binding IsolationElementOnView, UpdateSourceTrigger=PropertyChanged}"/>
 
                 </Grid>
             </GroupBox>
@@ -59,8 +74,8 @@
                         <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="160" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.9*" />
+                        <ColumnDefinition Width="1.1*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Введите текущий № группы"  DockPanel.Dock="Left" VerticalAlignment="Center"/>
 
@@ -75,26 +90,18 @@
 
                     <TextBlock Grid.Column="2" Text="Введите новый № группы" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
 
-                    <TextBox x:Name="NewGroupNumber" Grid.Column="2" 
-                             HorizontalAlignment="Center"  
-                     Grid.ColumnSpan="3"
-                     Width="140"
-                     Margin="5"
+                    <TextBox x:Name="NewGroupNumber" Grid.Column="3" 
+                             HorizontalAlignment="Stretch"
+                     Margin="0,5,1,5"
                      Text="{Binding TextToNewGroupNumber, UpdateSourceTrigger=PropertyChanged}"
                      Panel.ZIndex="1000"
                     VerticalContentAlignment="Center"/>
-
-
-
-
-
-
                     <Button Grid.Column="6"
                         BorderThickness="0"
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="НАЗНАЧИТЬ № ГРУППЫ"
-                        Margin="5"
+                        Margin="0,5,5,5"
                         Command="{Binding SetGroupNumber}"/>
 
 
@@ -104,34 +111,25 @@
                      Grid.ColumnSpan="2"
                      Width="147"
                      Margin="5"
-                     Text="{Binding TextToCurGroupNamber, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding TextToCurGroupNamber_2, UpdateSourceTrigger=PropertyChanged}"
                      Panel.ZIndex="10000"
                      VerticalContentAlignment="Center"/>
 
 
                     <TextBlock Grid.Column="2" Grid.Row="1" Text="Выберите тип кабеля" Margin="5" DockPanel.Dock="Left" VerticalAlignment="Center"/>
-
-
                     <ComboBox Grid.Column="3"
                               Grid.Row="1"
-                              Margin="5"
+                              Margin="0,5,1,5"
                               ItemsSource="{Binding ListCableTypeGraphics}"
                               SelectedItem="{Binding SelecteditemCableTypeGraphics, UpdateSourceTrigger=PropertyChanged}"/>
-
-
                     <Button Grid.Column="6"
                             Grid.Row="1"
                         BorderThickness="0"
                         Foreground="White"                        
                         Background="#499FFB"
                         Content="НАЗНАЧИТЬ ТИП КАБЕЛЯ"
-                        Margin="5"
+                        Margin="0,5,5,5"
                         Command="{Binding SetCabelType}"/>
-
-
-
-
-
                 </Grid>
             </GroupBox>
         </DockPanel>
@@ -205,7 +203,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
+
                 <DataGridTextColumn 
                     MinWidth="100"
                     Width="*"
@@ -219,18 +217,18 @@
                     Binding="{Binding CableLength}" 
                     IsReadOnly="True"
                      Visibility="Hidden"/>
-                
+
                 <DataGridTextColumn
                    Width="*"
                     Header="ID Семейства" 
                     Binding="{Binding Id}" 
                     IsReadOnly="True"/>
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
             </DataGrid.Columns>
         </DataGrid>
         <DockPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" LastChildFill="True">
